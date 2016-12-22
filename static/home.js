@@ -1,4 +1,6 @@
 $(function() {
+  var origSize;
+
   // input of the original image
   function setOriginalImage(url, callback) {
     var uploadImg = new Image();
@@ -8,9 +10,19 @@ $(function() {
         height: uploadImg.height,
         width: uploadImg.width
       });
-      $('#old-regions').css({
+      $('#old-mask').css({
         marginTop: (-1 * $('img.original').height()) + 'px'
       });
+      
+      origSize = uploadImg.height;
+      var newWidth = Math.round(8 * origSize / $('img.original').height());
+      var ctx1 = $('#old-mask')[0].getContext('2d');
+      var ctx2 = $('#new-mask')[0].getContext('2d');
+      ctx1.strokeStyle = 'red';
+      ctx1.lineWidth = newWidth;
+      ctx2.strokeStyle = 'red';
+      ctx2.lineWidth = newWidth;
+      $('.color.red').addClass('highlight');
       
       if (callback && typeof callback === 'function') {
         callback();
@@ -27,7 +39,7 @@ $(function() {
     }
   });
   
-  /* TODO:
+  /* TODO: images from cross-origin URLs
   $('.submit-original[type="text"]').on('change', function(e) {
     // image on remote website
     $('img.original').attr('src', e.target.value);
@@ -53,8 +65,8 @@ $(function() {
     }
     
     $(colorable).find('.color').click(function(e) {
-      $(".color").removeClass("highlight");
-      $(e.currentTarget).addClass("highlight");
+      $(colorable).find('.color').removeClass('highlight');
+      $(e.currentTarget).addClass('highlight');
       colorctx.strokeStyle = $(e.currentTarget).css('color');
       colorctx.fillStyle = $(e.currentTarget).css('color');
     });
@@ -76,21 +88,23 @@ $(function() {
     })
     .on('mousemove', function(e) {
       if (writing && !areas) {
+        var newX = Math.round(e.offsetX * origSize / $('img.original').height());
+        var newY = Math.round(e.offsetY * origSize / $('img.original').height());
         if (lastPt) {
-          colorctx.lineTo(e.offsetX, e.offsetY);
+          colorctx.lineTo(newX, newY);
           colorctx.stroke();
         }
-        colorctx.moveTo(e.offsetX, e.offsetY);
-        lastPt = [e.offsetX, e.offsetY];
+        colorctx.moveTo(newX, newY);
+        lastPt = [newX, newY];
       }
     });
   });
   
   $('#copy-masks').click(function() {
-    var firstMask = $('#old-regions')[0].toDataURL();
+    var firstMask = $('#old-mask')[0].toDataURL();
     var img = new Image();
     img.onload = function() {
-      $('#new-regions')[0].getContext('2d').drawImage(img, 0, 0);
+      $('#new-mask')[0].getContext('2d').drawImage(img, 0, 0);
     };
     img.src = firstMask;
   });
@@ -101,14 +115,14 @@ $(function() {
     $('img.original').attr('src', '/test-case/image.jpg');
     
     setOriginalImage('/test-case/image.jpg', function() {
-      var ctxOld = $('#old-regions')[0].getContext('2d');
+      var ctxOld = $('#old-mask')[0].getContext('2d');
       var imgOld = new Image();
       imgOld.onload = function() {
         ctxOld.drawImage(imgOld, 0, 0);
       };
       imgOld.src = '/test-case/image-mask.jpg';    
       
-      var ctxNew = $('#new-regions')[0].getContext('2d');
+      var ctxNew = $('#new-mask')[0].getContext('2d');
       var imgNew = new Image();
       imgNew.onload = function() {
         ctxNew.drawImage(imgNew, 0, 0);
@@ -120,17 +134,26 @@ $(function() {
   });
   
   // if everything goes well, user clicks this to start
-  $('.run').click(composeAndSubmitForm);
+  $('button.run').click(composeAndSubmitForm);
   
   function composeAndSubmitForm() {
     var originalImage = $('img.original').attr('src');
     var origImg = new Image();
     origImg.onload = function() {
-      $('input[name="original"]').val();
+      if (originalImage.indexOf('data:image') === 0) {
+        $('input[name="original"]').val(originalImage);
+      } else {
+        var canv = $('<canvas>').attr({
+          width: origImg.width,
+          height: origImg.height
+        })[0]
+        canv.getContext('2d').drawImage(origImg, 0, 0);
+        $('input[name="original"]').val(canv.toDataURL());
+      }
       
-      $('input[name="mask"]').val();
+      $('input[name="mask"]').val($('#old-mask')[0].toDataURL());
       
-      $('input[name="new-mask"]').val();
+      $('input[name="new-mask"]').val($('#new-mask')[0].toDataURL());
       
       $('form').submit();
     };

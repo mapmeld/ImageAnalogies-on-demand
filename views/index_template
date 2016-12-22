@@ -12,7 +12,8 @@
       <div class='row'>
         <div class='col-sm-12'>
           <h3>WeeklyDTTF: Image Analogies</h3>
-          <p>This project by @awentzonline allows you to change the shape or swap parts of images. In this first test of the WeeklyDTTF platform, you can change the shape of the arch.</p>
+          <p>The Image Analogies project by @awentzonline allows you to change the shape or swap parts of images.</p>
+          <p>In this first test of the WeeklyDTTF platform, you can change the shape of the arch.</p>
           <p>You can create a custom request or <a href='#' class='btn btn-success test-case'>Test Case A</a>.</p>
         </div>
       </div>
@@ -23,6 +24,8 @@
           <small>Select the original image by uploading a file or dropping it into the browser</small>
           <input class='submit-original' type='file'/>
           <input class='submit-original' type='text'/>
+          <br/>
+          <br/>
           <br/>
           <img class='original' src=''/>
         </div>
@@ -37,7 +40,7 @@
             <div class='color-palette'>
             </div>
             <img class='original' src=''/>
-            <canvas id='old-regions' width='320' height='462'></canvas>
+            <canvas id='old-mask' width='320' height='462'></canvas>
           </div>
         </div>
 
@@ -51,16 +54,18 @@
           <div class='colorable'>
             <div class='color-palette'>
             </div>
-            <canvas id='new-regions' width='320' height='462'></canvas>
+            <canvas id='new-mask' width='320' height='462'></canvas>
           </div>
         </div>
         
       </div>
       
       <div class='row'>
-        <div class='col-sm-12'>
-          <button class='btn btn-success run'>Run &rarr;</button>
-      
+        <div class='col-sm-12 runner'>
+          <hr/>
+          <button class='btn btn-success btn-lg run'>Run &rarr;</button>
+          <hr/>
+          
           <form class='hide' action='/spawn' method='POST'>
             <input type='hidden' name='original'/>
             <input type='hidden' name='mask'/>
