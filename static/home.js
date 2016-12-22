@@ -60,6 +60,15 @@ $(function() {
       }
     });
   });
+  
+  $('#copy-masks').click(function() {
+    var firstMask = $('#old-regions')[0].toDataURL();
+    var img = new Image();
+    img.onload = function() {
+      $('#new-regions')[0].getContext('2d').drawImage(img, 0, 0);
+    };
+    img.src = firstMask;
+  });
 
   // offer the test case (no need for custom images)
   $('.test-case').click(function() {

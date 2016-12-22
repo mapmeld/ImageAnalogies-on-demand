@@ -44,7 +44,7 @@
         <div class='col-sm-4'>
           <h4>Output regions</h4>
           <small>Paint new regions</small>
-          <button class='btn btn-default'>Start from original</button>
+          <button id='copy-masks' class='btn btn-default'>Start from original</button>
           <br/>
           <br/>
           <br/>
