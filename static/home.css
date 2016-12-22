@@ -1,3 +1,15 @@
+img.original {
+  margin-bottom: -15px;
+}
+
+img.original, canvas {
+  max-width: 100%;
+}
+
+canvas#old-regions {
+  opacity: 0.5;
+}
+
 .color-palette {
   text-align: center;
   margin-bottom: 8px;

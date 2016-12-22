@@ -1,13 +1,38 @@
 $(function() {
   // input of the original image
+  function setOriginalImage(url, callback) {
+    var uploadImg = new Image();
+    uploadImg.onload = function() {
+      $('img.original').attr('src', url);
+      $('canvas').attr({
+        height: uploadImg.height,
+        width: uploadImg.width
+      });
+      $('#old-regions').css({
+        marginTop: (-1 * $('img.original').height()) + 'px'
+      });
+      
+      if (callback && typeof callback === 'function') {
+        callback();
+      }
+    };
+    uploadImg.src = url;
+  }
+  
   $('.submit-original[type="file"]').on('change', function() {
-    // grab file directly, blob / file thing
-    // window.Object(e.target.value);
+    // grab file directly, without need to upload
+    var image = this.files[0];
+    if (image) {
+      setOriginalImage(URL.createObjectURL(image));
+    }
   });
+  
+  /* TODO:
   $('.submit-original[type="text"]').on('change', function(e) {
     // image on remote website
     $('img.original').attr('src', e.target.value);
   });
+  */
 
   // paint-over palettes from 'voices' app, which was cool
   $('.colorable').map(function(c, colorable) {
@@ -75,28 +100,21 @@ $(function() {
     // download /test-case, paste into canvases
     $('img.original').attr('src', '/test-case/image.jpg');
     
-    var ctxOld = $('#old-regions')[0].getContext('2d');
-    var imgOld = new Image();
-    imgOld.onload = function() {
-      ctxOld.drawImage(imgOld, 0, 0);
-      $('#old-regions').css({
-        marginTop: (-1 * imgOld.height) + 'px',
-        opacity: 0.5
-      });
-      $('img.original').css({
-        height: imgOld.height,
-        width: imgOld.width,
-        marginBottom: '-15px'
-      });
-    };
-    imgOld.src = '/test-case/image-mask.jpg';
-    
-    var ctxNew = $('#new-regions')[0].getContext('2d');
-    var imgNew = new Image();
-    imgNew.onload = function() {
-      ctxNew.drawImage(imgNew, 0, 0);
-    };
-    imgNew.src = '/test-case/image-mask-new.jpg';    
+    setOriginalImage('/test-case/image.jpg', function() {
+      var ctxOld = $('#old-regions')[0].getContext('2d');
+      var imgOld = new Image();
+      imgOld.onload = function() {
+        ctxOld.drawImage(imgOld, 0, 0);
+      };
+      imgOld.src = '/test-case/image-mask.jpg';    
+      
+      var ctxNew = $('#new-regions')[0].getContext('2d');
+      var imgNew = new Image();
+      imgNew.onload = function() {
+        ctxNew.drawImage(imgNew, 0, 0);
+      };
+      imgNew.src = '/test-case/image-mask-new.jpg';
+    });
     
     // user must click run themselves
   });
@@ -119,4 +137,37 @@ $(function() {
     origImg.src = originalImage;
   }
   
+  
+  function processDroppedImage (e) {
+    setOriginalImage(e.target.result);
+  }
+
+  function watchForDroppedImage() {
+    var blockHandler = function (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    };
+
+    // file drop handlers
+    var dropFile = function (e) {
+      e.stopPropagation();
+      e.preventDefault();
+      files = e.dataTransfer.files;
+      if (files && files.length) {
+        var reader = new FileReader();
+        var fileType = files[0].type.toLowerCase();
+        if(fileType.indexOf("image") > -1){
+          // process an image
+          reader.onload = processDroppedImage;
+          reader.readAsDataURL(files[0]);
+        }
+      }
+    };
+
+    window.addEventListener('dragenter', blockHandler, false);
+    window.addEventListener('dragexit', blockHandler, false);
+    window.addEventListener('dragover', blockHandler, false);
+    window.addEventListener('drop', dropFile, false);
+  }
+  watchForDroppedImage();
 });

@@ -20,7 +20,7 @@
 
         <div class='col-sm-4'>
           <h4>Original image</h4>
-          <small>Select the original image by uploading a file, (TODO: dropping it into the browser window), or pasting in a URL.</small>
+          <small>Select the original image by uploading a file or dropping it into the browser</small>
           <input class='submit-original' type='file'/>
           <input class='submit-original' type='text'/>
           <br/>
