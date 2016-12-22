@@ -66,7 +66,7 @@
           <button class='btn btn-success btn-lg run'>Run &rarr;</button>
           <hr/>
           
-          <form class='hide' action='/spawn' method='POST'>
+          <form class='hide' action='/spawn' enctype='multipart/form-data' method='POST'>
             <input type='hidden' name='original'/>
             <input type='hidden' name='mask'/>
             <input type='hidden' name='new-mask'/>
@@ -75,7 +75,9 @@
       </div>
       
       <div class='row'>
-        <p>WeeklyDTTF is an experiment in making deep learning more widely available. It's a very expensive experiment for me to try running on my own!  Please get in touch about sponsorship, re-hosting, or donating to keep this service free for .edu email addresses.</p>
+        <div class='col-sm-12'>
+          <p>WeeklyDTTF is an experiment in making deep learning more widely available. It's a very expensive experiment for me to try running on my own!  Please get in touch about sponsorship, re-hosting, or donating to keep this service free for .edu email addresses.</p>
+        </div>
       </div>
     </div>
     
