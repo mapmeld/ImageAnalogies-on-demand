@@ -1,5 +1,7 @@
 # Python utilities
 from binascii import a2b_base64
+from os import system, exists
+import os.path
 
 # server stuff (pip install bottle)
 from bottle import BaseRequest, route, run, view, static_file, request
@@ -8,9 +10,10 @@ from bottle import BaseRequest, route, run, view, static_file, request
 # allow the big image uploads
 BaseRequest.MEMFILE_MAX = 1024 * 1024
 
+# go from the browser's base64 image to an image file
 def saveImage(url, fname):
     binary_data = a2b_base64(url[url.find('base64') + 7:])
-    fd = open(fname, 'wb')
+    fd = open('input/' + fname, 'wb')
     fd.write(binary_data)
     fd.close()
 
@@ -30,6 +33,7 @@ def spawn():
     saveImage(original, 'original.jpg')
     saveImage(mask, 'mask.jpg')
     saveImage(newMask, 'new-mask.jpg')
+    system('make_image_analogy.py input/mask.jpg input/original.jpg input/new-mask.jpg output/a &')
     return {}
 
 # check results
@@ -37,6 +41,15 @@ def spawn():
 @view('results_template')
 def results():
     return {}
+
+# output images (show blank if not existing yet)
+@route('/output/<path>')
+def output(path):
+    path = path.replace('..', '')
+    if (os.path.isfile('./output/' + path)):
+        return static_file(path, './output')
+    else:
+        return static_file('missing.png', './output')
 
 # test image (static)
 @route('/test-case/<path>')
