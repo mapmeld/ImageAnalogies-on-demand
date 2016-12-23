@@ -1,4 +1,4 @@
-# TF Exp
+# Weekly.TF
 
 Project to spin up TensorFlow instances for custom user runs.
 
@@ -10,7 +10,7 @@ Install TensorFlow and <a href='https://github.com/awentzonline/image-analogies'
 
 Make sure to download the vgg16_weights.h5 file.
 
-TODO: test that Amazon AMI is truly using GPU
+Debugging: test that Amazon AMI is truly using GPU
 http://stackoverflow.com/questions/38009682/how-to-tell-if-tensorflow-is-using-gpu-acceleration-from-inside-python-shell
 
 ### Start server
@@ -18,11 +18,13 @@ http://stackoverflow.com/questions/38009682/how-to-tell-if-tensorflow-is-using-g
 Start the server as a background process:
 
 ```
-python3 server.py &
+nohup python server.py &
 disown
 ```
 
 Go to the index page ( http://localhost:8080/ ), click the 'Test Case' button, and then Run.
+
+On AWS: use a g2.2xlarge instance with port 80 open, and ensure that httpd is running, and ProxyPass / http://localhost:8080/
 
 ## License
 

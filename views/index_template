@@ -11,9 +11,9 @@
     <div class='container'>
       <div class='row'>
         <div class='col-sm-12'>
-          <h3>WeeklyDTTF: Image Analogies</h3>
+          <h3>Weekly.TF: Image Analogies</h3>
           <p>The Image Analogies project by @awentzonline allows you to change the shape or swap parts of images.</p>
-          <p>In this first test of the WeeklyDTTF platform, you can change the shape of the arch.</p>
+          <p>In this first test of the Weekly.TF platform, you can change the shape of the arch.</p>
           <p>You can create a custom request or <a href='#' class='btn btn-success test-case'>Test Case A</a>.</p>
         </div>
       </div>
@@ -76,7 +76,8 @@
       
       <div class='row'>
         <div class='col-sm-12'>
-          <p>WeeklyDTTF is an experiment in making deep learning more widely available. It's a very expensive experiment for me to try running on my own!  Please get in touch about sponsorship, re-hosting, or donating to keep this service free for .edu email addresses.</p>
+          <br/><br/>
+          <p>Weekly.TF is an experiment in making deep learning more widely available. It's a very expensive experiment for me to try running on my own!  Please get in touch about sponsorship, re-hosting, or donating to keep this service free for .edu email addresses.</p>
         </div>
       </div>
     </div>
