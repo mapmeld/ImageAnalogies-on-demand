@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset='utf-8'/>
+    <meta name='viewport' content='width=device-width, initial-scale=1'/>
     <title>Order Form: Image Analogies</title>
     
     <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' integrity='sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u' crossorigin='anonymous'/>
@@ -32,11 +33,11 @@
 
         <div class='col-sm-4'>
           <h4>Define regions of the image</h4>
-          <small>Paint over sections of the image which will be rearranged in the final product.</small>
+          <strong>Paint over sections of the image which will be rearranged in the final product.</strong>
           <br/>
           <br/>
           <br/>
-          <div class='colorable'>
+          <div class='colorable well'>
             <div class='color-palette'>
             </div>
             <img class='original' src=''/>
@@ -46,12 +47,12 @@
 
         <div class='col-sm-4'>
           <h4>Output regions</h4>
-          <small>Paint new regions</small>
+          <strong>Paint new regions</strong>
           <button id='copy-masks' class='btn btn-default'>Start from original</button>
           <br/>
           <br/>
           <br/>
-          <div class='colorable'>
+          <div class='colorable well'>
             <div class='color-palette'>
             </div>
             <canvas id='new-mask' width='320' height='462'></canvas>
