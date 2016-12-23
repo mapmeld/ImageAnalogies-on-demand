@@ -31,6 +31,11 @@ def index():
 def faces():
     return {}
 
+@route('/monster')
+@view('monster_template')
+def monster():
+    return {}
+
 # receive images and start up TensorFlow
 @route('/spawn', method='POST')
 @view('started_template')
@@ -40,6 +45,11 @@ def spawn():
         saveImage(original, 'original.jpg')
         system('rm output/a*.png')
         system('../image-analogies/scripts/make_image_analogy.py output/sugarskull-A.jpg output/sugarskull-Ap.jpg input/original.jpg output/a --patch-size=3 &')
+    elif (request.forms.get('experiment') == 'monster'):
+        original = request.forms.get('original')
+        saveImage(original, 'original.jpg')
+        system('rm output/a*.png')
+        system('../image-analogies/scripts/make_image_analogy.py output/monster-A.jpg output/monster-Ap.jpg input/original.jpg output/a --patch-size=3 &')
     else:
         original = request.forms.get('original')
         mask = request.forms.get('mask')
