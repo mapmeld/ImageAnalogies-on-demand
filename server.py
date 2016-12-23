@@ -1,6 +1,6 @@
 # Python utilities
 from binascii import a2b_base64
-from os import system, exists
+from os import system
 import os.path
 
 # server stuff (pip install bottle)
@@ -13,9 +13,11 @@ BaseRequest.MEMFILE_MAX = 1024 * 1024
 # go from the browser's base64 image to an image file
 def saveImage(url, fname):
     binary_data = a2b_base64(url[url.find('base64') + 7:])
-    fd = open('input/' + fname, 'wb')
+    fd = open('input/' + fname + '_alpha', 'wb')
     fd.write(binary_data)
     fd.close()
+    # remove alpha channel from <canvas> images
+    system('convert -alpha off input/' + fname + '_alpha input/' + fname)
 
 # homepage
 @route('/')
@@ -33,7 +35,8 @@ def spawn():
     saveImage(original, 'original.jpg')
     saveImage(mask, 'mask.jpg')
     saveImage(newMask, 'new-mask.jpg')
-    system('make_image_analogy.py input/mask.jpg input/original.jpg input/new-mask.jpg output/a &')
+    system('rm output/a*.png')
+    system('make_image_analogy.py input/mask.jpg input/original.jpg input/new-mask.jpg output/a --patch-size=3 &')
     return {}
 
 # check results

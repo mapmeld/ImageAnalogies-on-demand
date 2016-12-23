@@ -59,9 +59,9 @@ $(function() {
     var colorctx = $(colorable).find('canvas')[0].getContext('2d');
     colorctx.fillStyle = 'red';
     colorctx.strokeStyle = 'red';
-    colorctx.lineWidth = 8;
+    colorctx.lineWidth = 12;
     if (window.devicePixelRatio && window.devicePixelRatio > 1) {
-      colorctx.lineWidth = 12;
+      colorctx.lineWidth = 18;
     }
     
     $(colorable).find('.color').click(function(e) {
