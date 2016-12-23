@@ -19,7 +19,6 @@ Start the server as a background process:
 
 ```
 nohup python server.py &
-disown
 ```
 
 Go to the index page ( http://localhost:8080/ ), click the 'Test Case' button, and then Run.

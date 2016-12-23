@@ -37,7 +37,7 @@ def spawn():
         saveImage(mask, 'mask.jpg')
         saveImage(newMask, 'new-mask.jpg')
         system('rm output/a*.png')
-        system('make_image_analogy.py input/mask.jpg input/original.jpg input/new-mask.jpg output/a --patch-size=3 &')
+        system('../image-analogies/scripts/make_image_analogy.py input/mask.jpg input/original.jpg input/new-mask.jpg output/a --patch-size=3 &')
     return {}
 
 @route('/spawn', method='GET')
