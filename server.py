@@ -25,14 +25,25 @@ def saveImage(url, fname):
 def index():
     return {}
 
+# faces experiment
+@route('/faces')
+@view('faces_template')
+def faces():
+    return {}
+
 # receive images and start up TensorFlow
 @route('/spawn', method='POST')
 @view('started_template')
 def spawn():
-    original = request.forms.get('original')
-    mask = request.forms.get('mask')
-    newMask = request.forms.get('new-mask')
-    if (len(original) > 0 and len(mask) > 0 and len(newMask) > 0):
+    if (request.forms.get('experiment') == 'faces'):
+        original = request.forms.get('original')
+        saveImage(original, 'original.jpg')
+        system('rm output/a*.png')
+        system('../image-analogies/scripts/make_image_analogy.py output/sugarskull-A.jpg output/sugarskull-Ap.jpg input/original.jpg output/a --patch-size=3 &')
+    else:
+        original = request.forms.get('original')
+        mask = request.forms.get('mask')
+        newMask = request.forms.get('new-mask')
         saveImage(original, 'original.jpg')
         saveImage(mask, 'mask.jpg')
         saveImage(newMask, 'new-mask.jpg')
