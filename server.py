@@ -32,11 +32,17 @@ def spawn():
     original = request.forms.get('original')
     mask = request.forms.get('mask')
     newMask = request.forms.get('new-mask')
-    saveImage(original, 'original.jpg')
-    saveImage(mask, 'mask.jpg')
-    saveImage(newMask, 'new-mask.jpg')
-    system('rm output/a*.png')
-    system('make_image_analogy.py input/mask.jpg input/original.jpg input/new-mask.jpg output/a --patch-size=3 &')
+    if (len(original) > 0 and len(mask) > 0 and len(newMask) > 0):
+        saveImage(original, 'original.jpg')
+        saveImage(mask, 'mask.jpg')
+        saveImage(newMask, 'new-mask.jpg')
+        system('rm output/a*.png')
+        system('make_image_analogy.py input/mask.jpg input/original.jpg input/new-mask.jpg output/a --patch-size=3 &')
+    return {}
+
+@route('/spawn', method='GET')
+@view('started_template')
+def spawn_land():
     return {}
 
 # check results
