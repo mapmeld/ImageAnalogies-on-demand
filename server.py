@@ -1,7 +1,7 @@
 # Python utilities
 from binascii import a2b_base64
 from os import system
-import os.path
+import os.path, json, subprocess
 
 # server stuff (pip install bottle)
 from bottle import BaseRequest, route, run, view, static_file, request
@@ -9,6 +9,11 @@ from bottle import BaseRequest, route, run, view, static_file, request
 
 # allow the big image uploads
 BaseRequest.MEMFILE_MAX = 1024 * 1024
+
+# monitor if anyone has given the server a task yet
+given_task = False
+started_task = False
+finished_task = False
 
 # go from the browser's base64 image to an image file
 def saveImage(url, fname):
@@ -19,52 +24,54 @@ def saveImage(url, fname):
     # remove alpha channel from <canvas> images
     system('convert -alpha off input/' + fname + '_alpha input/' + fname)
 
+# based on http://stackoverflow.com/questions/7647167/check-if-a-process-is-running-in-python-in-linux-unix
+def findProcess(process_name):
+    ps = subprocess.Popen("ps aux | grep " + process_name, shell=True, stdout=subprocess.PIPE)
+    output = ps.stdout.read()
+    ps.stdout.close()
+    ps.wait()
+    return output.split('\n')
+
 # homepage
 @route('/')
 @view('index_template')
 def index():
     return {}
 
-# faces experiment
-@route('/faces')
-@view('faces_template')
-def faces():
-    return {}
+# status.json
+@route('/status')
+def status():
+    # determine at check-time if task has finished
+    if started_task and not finished_task:
+       matching_processes = findProcess('make_image')
+       if len(matching_processes) == 3:
+           finished_task = True
 
-@route('/monster')
-@view('monster_template')
-def monster():
-    return {}
+    stat = {
+      "serving": True, # always true while server is on
+      "started_task": started_task,
+      "finished_task": finished_task
+    }
+    return json.dumps(stat)
 
 # receive images and start up TensorFlow
 @route('/spawn', method='POST')
-@view('started_template')
 def spawn():
-    if (request.forms.get('experiment') == 'faces'):
-        original = request.forms.get('original')
-        saveImage(original, 'original.jpg')
-        system('rm output/a*.png')
-        system('../image-analogies/scripts/make_image_analogy.py output/sugarskull-A.jpg output/sugarskull-Ap.jpg input/original.jpg output/a --patch-size=3 &')
-    elif (request.forms.get('experiment') == 'monster'):
-        original = request.forms.get('original')
-        saveImage(original, 'original.jpg')
-        system('rm output/a*.png')
-        system('../image-analogies/scripts/make_image_analogy.py output/monster-A.jpg output/monster-Ap.jpg input/original.jpg output/a --patch-size=3 &')
-    else:
-        original = request.forms.get('original')
-        mask = request.forms.get('mask')
-        newMask = request.forms.get('new-mask')
-        saveImage(original, 'original.jpg')
-        saveImage(mask, 'mask.jpg')
-        saveImage(newMask, 'new-mask.jpg')
-        system('rm output/a*.png')
-        system('../image-analogies/scripts/make_image_analogy.py input/mask.jpg input/original.jpg input/new-mask.jpg output/a --patch-size=3 &')
-    return {}
+    # update tasking status
+    given_task = True
+    finished_task = False
 
-@route('/spawn', method='GET')
-@view('started_template')
-def spawn_land():
-    return {}
+    system('rm output/a*.png')
+    original = request.forms.get('original')
+    mask = request.forms.get('mask')
+    newMask = request.forms.get('new-mask')
+    saveImage(original, 'original.jpg')
+    saveImage(mask, 'mask.jpg')
+    saveImage(newMask, 'new-mask.jpg')
+
+    system('python task.py &')
+    started_task = True
+    return json.dumps({ spawned: True })
 
 # check results
 @route('/results')
@@ -80,11 +87,6 @@ def output(path):
         return static_file(path, './output')
     else:
         return static_file('missing.png', './output')
-
-# test image (static)
-@route('/test-case/<path>')
-def test_cases(path):
-    return static_file(path.replace('..', ''), './test-case')
 
 # static files
 @route('/js/<path>')

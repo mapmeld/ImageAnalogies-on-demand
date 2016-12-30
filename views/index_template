@@ -19,60 +19,6 @@
         </div>
       </div>
       <div class='row'>
-
-        <div class='col-sm-4'>
-          <h4>Original image</h4>
-          <small>Select the original image by uploading a file or dropping it into the browser</small>
-          <input class='submit-original' type='file'/>
-          <input class='submit-original' type='text'/>
-          <br/>
-          <br/>
-          <br/>
-          <img class='original' src=''/>
-        </div>
-
-        <div class='col-sm-4'>
-          <h4>Define regions of the image</h4>
-          <strong>Paint over sections of the image which will be rearranged in the final product.</strong>
-          <br/>
-          <br/>
-          <br/>
-          <div class='colorable well'>
-            <div class='color-palette'>
-            </div>
-            <img class='original' src=''/>
-            <canvas id='old-mask' width='320' height='462'></canvas>
-          </div>
-        </div>
-
-        <div class='col-sm-4'>
-          <h4>Output regions</h4>
-          <strong>Paint new regions</strong>
-          <button id='copy-masks' class='btn btn-default'>Start from original</button>
-          <br/>
-          <br/>
-          <br/>
-          <div class='colorable well'>
-            <div class='color-palette'>
-            </div>
-            <canvas id='new-mask' width='320' height='462'></canvas>
-          </div>
-        </div>
-        
-      </div>
-      
-      <div class='row'>
-        <div class='col-sm-12 runner'>
-          <hr/>
-          <button class='btn btn-success btn-lg run'>Run &rarr;</button>
-          <hr/>
-          
-          <form class='hide' action='/spawn' enctype='multipart/form-data' method='POST'>
-            <input type='hidden' name='original'/>
-            <input type='hidden' name='mask'/>
-            <input type='hidden' name='new-mask'/>
-          </form>
-        </div>
       </div>
       
       <div class='row'>
@@ -82,8 +28,5 @@
         </div>
       </div>
     </div>
-    
-    <script src='https://code.jquery.com/jquery-3.1.1.min.js' integrity='sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=' crossorigin='anonymous'></script>
-    <script src='/js/home.js'></script>
   </body>
 </html>
