@@ -46,11 +46,17 @@ def status():
        matching_processes = findProcess('make_image')
        if len(matching_processes) == 3:
            finished_task = True
+    
+    # check how many images have been processed
+    rounds = []
+    if (os.path.isfile('./output/a_')):
+        rounds.push('yes')
 
     stat = {
       "serving": True, # always true while server is on
       "started_task": started_task,
-      "finished_task": finished_task
+      "finished_task": finished_task,
+      "rounds": rounds
     }
     return json.dumps(stat)
 
@@ -61,7 +67,7 @@ def spawn():
     given_task = True
     finished_task = False
 
-    system('rm output/a*.png')
+    # save new images
     original = request.forms.get('original')
     mask = request.forms.get('mask')
     newMask = request.forms.get('new-mask')
@@ -69,6 +75,7 @@ def spawn():
     saveImage(mask, 'mask.jpg')
     saveImage(newMask, 'new-mask.jpg')
 
+    # run task async so we can get back to being a server
     system('python task.py &')
     started_task = True
     return json.dumps({ spawned: True })
