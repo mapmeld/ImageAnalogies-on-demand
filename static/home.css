@@ -6,7 +6,7 @@ img.original, canvas {
   max-width: 100%;
 }
 
-canvas#old-regions {
+canvas#old-mask {
   opacity: 0.5;
 }
 
